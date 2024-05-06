@@ -1,17 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:fmms/LoginPage/signup.dart';
 import 'package:fmms/HomePage/homepage.dart';
+import 'package:fmms/mongodb.dart'; // Import your MongoDB class
 
 class LoginPage extends StatefulWidget {
-  
   final PageController controller;
   const LoginPage({Key? key, required this.controller}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _MyAppState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _MyAppState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
+  // Function to handle login
+  Future<void> _login() async {
+    if (_formKey.currentState!.validate()) {
+      // Validate form fields
+      String username = _usernameController.text.trim();
+      String password = _passwordController.text;
+
+      // Call login function from MongoDB class
+      bool loggedIn = await MongoDatabase.login(username, password);
+
+      if (loggedIn) {
+        // If login successful, navigate to home page
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(controller: widget.controller),
+          ),
+        );
+      } else {
+        // Handle invalid credentials
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Login Failed'),
+              content: Text('Invalid username or password.'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,90 +66,80 @@ class _MyAppState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              
-              SizedBox(height: 20,),
-
-              Text('Login',style: TextStyle(
-                fontSize: 35, 
-                color:Colors.blue,
-                fontWeight: FontWeight.bold
+              SizedBox(height: 20),
+              Text(
+                'Login',
+                style: TextStyle(
+                  fontSize: 35,
+                  color: Colors.blue,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-
-              SizedBox(height: 20,),
-              
-               Image.asset(
-                'assets/image.png', // replace with your actual image path
-                height: 150, // adjust the height as needed
-              ),
-              SizedBox(height: 20,),
-              
+              SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.all(30),
-                child: Form(child: Column(
-                  children: [
-                    TextFormField(
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(
-                        labelText: 'User Name',
-                        hintText: 'Enter User Name',
-                        border: OutlineInputBorder(  
-                              borderRadius:BorderRadius.all(Radius.circular(15))
-                             ),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: _usernameController,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                          labelText: 'User Name',
+                          hintText: 'Enter User Name',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(15),
+                            ),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter user name';
+                          }
+                          return null;
+                        },
                       ),
-                      onChanged: (String value) {
-                        
-                      },
-                      validator: (value) {
-                        return value!.isEmpty? 'Please enter user name' : null;
-                      },
-                    ),
-                
-                    SizedBox(height: 30,),
-                
-                    TextFormField(
-                      keyboardType: TextInputType.visiblePassword,
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        hintText: 'Enter Password',
-                        border: OutlineInputBorder(borderRadius:BorderRadius.all(Radius.circular(15))),
+                      SizedBox(height: 30),
+                      TextFormField(
+                        controller: _passwordController,
+                        keyboardType: TextInputType.visiblePassword,
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          hintText: 'Enter Password',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(15),
+                            ),
+                          ),
+                        ),
+                        obscureText: true,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter password';
+                          }
+                          return null;
+                        },
                       ),
-                      onChanged: (String value) {
-                        
-                      },
-                      validator: (value) {
-                        return value!.isEmpty? 'Please enter password' : null;
-                      },
-                    ),
-          
-                    SizedBox(height: 30,),
-
-                    ElevatedButton(
-                      onPressed:(){
-                        // Navigate to the HomePage
-                        Navigator.pushReplacement(
-                          context,
-                           MaterialPageRoute(
-                                  builder: (context) =>
-                                      HomeScreen(controller: widget.controller),
-                                ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-    primary: Colors.green, // Set the button color here
-  ),
-                      child: Text('Login',style: TextStyle(
-                   
-                      color:Colors.black,
-                      fontWeight: FontWeight.bold
-                ),),
-                       
-                    ),
-                      SizedBox(height: 20,),
-                      
+                      SizedBox(height: 30),
+                      ElevatedButton(
+                        onPressed: _login,
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.green,
+                        ),
+                        child: Text(
+                          'Login',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20),
                       Row(
                         children: [
-                          const Text(
+                          Text(
                             'Don’t have an account?',
                             style: TextStyle(
                               color: Colors.grey,
@@ -113,19 +148,19 @@ class _MyAppState extends State<LoginPage> {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          const SizedBox(
-                            width: 2.5,
-                          ),
+                          SizedBox(width: 2.5),
                           InkWell(
                             onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => SignupPage(
-                                        controller: widget.controller)),
+                                  builder: (context) => SignupPage(
+                                    controller: widget.controller,
+                                  ),
+                                ),
                               );
                             },
-                            child: const Text(
+                            child: Text(
                               'Sign Up',
                               style: TextStyle(
                                 color: Color(0xFF003580),
@@ -137,10 +172,8 @@ class _MyAppState extends State<LoginPage> {
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      const Text(
+                      SizedBox(height: 5),
+                      Text(
                         'Forget Password?',
                         style: TextStyle(
                           color: Color(0xFF003580),
@@ -149,17 +182,15 @@ class _MyAppState extends State<LoginPage> {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                  ],)
+                      SizedBox(height: 20),
+                    ],
+                  ),
                 ),
-              )
+              ),
             ],
           ),
         ),
       ),
-
     );
   }
 }

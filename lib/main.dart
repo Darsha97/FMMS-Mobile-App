@@ -1,21 +1,15 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:fmms/mongodb.dart';
 import 'firebase_options.dart';
 import 'package:fmms/HomePage/welcomepage.dart';
-import 'package:flutter/material.dart'; 
+import 'package:flutter/material.dart';
 import 'package:fmms/LoginPage/login.dart';
 import 'package:fmms/LoginPage/signup.dart';
 import 'package:fmms/AppBar/appbar.dart';
 
- 
-
 void main() async {
-
-WidgetsFlutterBinding.ensureInitialized(); 
-await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-);
- 
-
+  WidgetsFlutterBinding.ensureInitialized();
+  await MongoDatabase.connect();
   runApp(MyApp());
 }
 
@@ -28,8 +22,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: const Color(0xFF003580),
-      ), 
-      home:WelcomeScreen() ,//WelcomeScreen(),
+      ),
+      home: WelcomeScreen(), //WelcomeScreen(),
     );
   }
 }
