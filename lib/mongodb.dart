@@ -27,24 +27,39 @@ class MongoDatabase {
 
   // Function to handle user login
   static Future<bool> login(String username, String password) async {
-    var userCollection = db!.collection(userCollectionName);
-    var user =
-        await userCollection.findOne({'regNo': username, 'password': password});
-    return user != null;
+    try {
+      // Ensure that the database connection is established
+      if (db == null) {
+        await connect();
+      }
+
+      var userCollection = db!.collection(userCollectionName);
+      var user = await userCollection
+          .findOne({'regNo': username, 'password': password});
+      return user != null;
+    } catch (e) {
+      log(e.toString());
+      return false;
+    }
   }
 
   static Future<String> insert(User data) async {
     try {
+      // Ensure that the database connection is established
+      if (db == null) {
+        await connect();
+      }
+
       var userCollection = db!.collection(userCollectionName);
       var result = await userCollection.insertOne(data.toJson());
       if (result.isSuccess) {
-        return "SignUp Sucessfull";
+        return "Sign Up Successful";
       } else {
-        return "SignUp Failed.";
+        return "Sign Up Failed.";
       }
     } catch (e) {
       print(e.toString());
-      return e.toString();
+      return "Sign Up Failed.";
     }
   }
 }
