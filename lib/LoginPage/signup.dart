@@ -25,6 +25,35 @@ class _SignupPageState extends State<SignupPage> {
   String? _roleValue;
   String? _departmentValue;
 
+  @override
+  void initState() {
+    super.initState();
+    _regNoController.addListener(_updateRole); // Listen to changes in regNo
+  }
+
+  @override
+  void dispose() {
+    _regNoController.dispose(); // Dispose the controller
+    super.dispose();
+  }
+
+  void _updateRole() {
+    String regNo = _regNoController.text;
+    setState(() {
+      if (regNo.startsWith('EG')) {
+        _roleValue = 'Student';
+      } else if (regNo.startsWith('AC')) {
+        _roleValue = 'Academic Staff';
+      } else if (regNo.startsWith('AD')) {
+        _roleValue = 'Admin';
+      } else if (regNo.startsWith('MD')) {
+        _roleValue = 'Maintenance Division';
+      } else {
+        _roleValue = null; // Clear role if not matched
+      }
+    });
+  }
+
   Future<void> _signUp(
     String fullName,
     String email,
@@ -84,104 +113,209 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Sign Up'),
-      ),
+      // appBar: AppBar(
+      //   title: Text('Sign Up'),
+      //   backgroundColor: Colors.blue, // Customize app bar color
+      // ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              controller: _fullNameController,
-              decoration: InputDecoration(labelText: 'Full Name'),
-            ),
-            TextField(
-              controller: _emailController,
-              decoration: InputDecoration(labelText: 'Email'),
-            ),
-            TextField(
-              controller: _regNoController,
-              decoration: InputDecoration(labelText: 'Registration No.'),
-            ),
-            DropdownButtonFormField<String>(
-              value: _roleValue,
-              onChanged: (value) {
-                setState(() {
-                  _roleValue = value;
-                });
-              },
-              items: ['Student', 'Lecturer', 'Admin']
-                  .map<DropdownMenuItem<String>>(
-                    (value) => DropdownMenuItem(
-                      value: value,
-                      child: Text(value),
-                    ),
-                  )
-                  .toList(),
-              decoration: InputDecoration(
-                labelText: 'Role',
-                hintText: 'Select Role',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
+        child: Padding(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(
+                child: Text(
+                  'Sign Up',
+                  style: TextStyle(
+                    fontSize: 35,
+                    color: Color.fromARGB(255, 24, 8, 163),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                contentPadding: EdgeInsets.all(15),
               ),
-            ),
-            DropdownButtonFormField<String>(
-              value: _departmentValue,
-              onChanged: (value) {
-                setState(() {
-                  _departmentValue = value;
-                });
-              },
-              items: ['Civil', 'Electrical', 'Mechanical']
-                  .map<DropdownMenuItem<String>>(
-                    (value) => DropdownMenuItem(
-                      value: value,
-                      child: Text(value),
-                    ),
-                  )
-                  .toList(),
-              decoration: InputDecoration(
-                labelText: 'Department',
-                hintText: 'Select Department',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
+              SizedBox(height: 0),
+              Container(
+                width: 1000,
+                height: 100,
+                child: Image.asset("assets/draw2.jpg"),
+              ),
+              SizedBox(height: 5),
+              TextField(
+                controller: _fullNameController,
+                decoration: InputDecoration(
+                  labelText: 'Full Name',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  filled: true, // Set to true to fill the background
+                  fillColor: Color.fromARGB(255, 225, 237, 241),
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                 ),
-                contentPadding: EdgeInsets.all(15),
               ),
-            ),
-            TextField(
-              controller: _contactNumberController,
-              decoration: InputDecoration(labelText: 'Contact Number'),
-            ),
-            TextField(
-              controller: _passwordController,
-              decoration: InputDecoration(labelText: 'Password'),
-              obscureText: true,
-            ),
-            TextField(
-              controller: _confirmPasswordController,
-              decoration: InputDecoration(labelText: 'Confirm Password'),
-              obscureText: true,
-            ),
-            ElevatedButton(
-              onPressed: () {
-                _signUp(
-                  _fullNameController.text,
-                  _emailController.text,
-                  _regNoController.text,
-                  _passwordController.text,
-                  _confirmPasswordController.text,
-                  _contactNumberController.text,
-                  _roleValue!,
-                  _departmentValue!,
-                );
-              },
-              child: Text('Sign Up'),
-            ),
-          ],
+              SizedBox(height: 10),
+              TextField(
+                controller: _emailController,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  //labelStyle: TextStyle(color: Colors.blue),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    //borderSide: BorderSide(color: Color.fromARGB(255, 144, 144, 212)),
+                  ),
+                  filled: true, // Set to true to fill the background
+                  fillColor: Color.fromARGB(
+                      255, 234, 225, 232), // Customize the fill color
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                ),
+              ),
+              SizedBox(height: 10),
+              TextField(
+                controller: _regNoController,
+                decoration: InputDecoration(
+                  labelText: 'Registration No.',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  filled: true, // Set to true to fill the background
+                  fillColor: Color.fromARGB(255, 225, 237, 241),
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                ),
+                onChanged: (_) => _updateRole(),
+              ),
+              SizedBox(height: 10),
+              TextField(
+                enabled: false, // Disable user input
+                controller: TextEditingController(text: _roleValue ?? ''),
+                decoration: InputDecoration(
+                  labelText: 'Role',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  filled: true, // Set to true to fill the background
+                  fillColor: Color.fromARGB(255, 234, 225, 232),
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                ),
+              ),
+              SizedBox(height: 10),
+              DropdownButtonFormField<String>(
+                value: _departmentValue,
+                onChanged: (value) {
+                  setState(() {
+                    _departmentValue = value;
+                  });
+                },
+                items: [
+                  'Electrical and Information Department',
+                  'Civil and Environmental Department',
+                  'Mechanical and Manufacturing Department',
+                  'Marine and Naval Architecture',
+                  'Interdisciplinary Studies',
+                  'Maintenance Division',
+                  'Admin Sector'
+                ]
+                    .map<DropdownMenuItem<String>>(
+                      (value) => DropdownMenuItem(
+                        value: value,
+                        child: Text(value),
+                      ),
+                    )
+                    .toList(),
+                decoration: InputDecoration(
+                  labelText: 'Department',
+                  hintText: 'Select Department',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                  filled: true, // Set to true to fill the background
+                  fillColor: Color.fromARGB(255, 225, 237, 241),
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                ),
+              ),
+              SizedBox(height: 10),
+              TextField(
+                controller: _contactNumberController,
+                decoration: InputDecoration(
+                  labelText: 'Contact Number',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  filled: true, // Set to true to fill the background
+                  fillColor: Color.fromARGB(255, 234, 225, 232),
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                ),
+              ),
+              SizedBox(height: 10),
+              TextField(
+                controller: _passwordController,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  filled: true, // Set to true to fill the background
+                  fillColor: Color.fromARGB(255, 225, 237, 241),
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                ),
+                obscureText: true,
+              ),
+              SizedBox(height: 10),
+              TextField(
+                controller: _confirmPasswordController,
+                decoration: InputDecoration(
+                  labelText: 'Confirm Password',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  filled: true, // Set to true to fill the background
+                  fillColor: Color.fromARGB(255, 234, 225, 232),
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                ),
+                obscureText: true,
+              ),
+              SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 100.0),
+                width: 20,
+                height: 40,
+                child: ElevatedButton(
+                  onPressed: () {
+                    _signUp(
+                      _fullNameController.text,
+                      _emailController.text,
+                      _regNoController.text,
+                      _passwordController.text,
+                      _confirmPasswordController.text,
+                      _contactNumberController.text,
+                      _roleValue!,
+                      _departmentValue!,
+                    );
+                  },
+                  child: Container(
+                    // Ensure the button fills the Container
+                    alignment: Alignment.center, // Center the text horizontally
+                    child: Text(
+                      'Sign Up',
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: Color.fromARGB(255, 237, 130, 7), // Button color
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
