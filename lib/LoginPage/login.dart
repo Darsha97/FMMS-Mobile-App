@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fmms/LoginPage/signup.dart';
 import 'package:fmms/HomePage/homepage.dart';
-import 'package:fmms/mongodb.dart'; // Import your MongoDB class
 
 class LoginPage extends StatefulWidget {
   final PageController controller;
@@ -16,44 +15,15 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
-  // Function to handle login
-  Future<void> _login() async {
+  void _login() {
     if (_formKey.currentState!.validate()) {
-      // Validate form fields
-      String username = _usernameController.text.trim();
-      String password = _passwordController.text;
-
-      // Call login function from MongoDB class
-      bool loggedIn = await MongoDatabase.login(username, password);
-
-      if (loggedIn) {
-        // If login successful, navigate to home page
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => HomeScreen(controller: widget.controller),
-          ),
-        );
-      } else {
-        // Handle invalid credentials
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Login Failed'),
-              content: Text('Invalid username or password.'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
-      }
+      // Navigate to home page
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomeScreen(controller: widget.controller),
+        ),
+      );
     }
   }
 
@@ -66,16 +36,21 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 20),
+              SizedBox(height: 40),
               Text(
                 'Login',
                 style: TextStyle(
                   fontSize: 35,
-                  color: Colors.blue,
+                  color: Color.fromARGB(255, 24, 8, 163),
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 0),
+              Container(
+                width: 300,
+                height: 200,
+                child: Image.asset("assets/draw2.jpg"),
+              ),
               Padding(
                 padding: const EdgeInsets.all(30),
                 child: Form(
@@ -101,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 30),
+                      SizedBox(height: 10),
                       TextFormField(
                         controller: _passwordController,
                         keyboardType: TextInputType.visiblePassword,
@@ -126,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
                       ElevatedButton(
                         onPressed: _login,
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.green,
+                          primary: Color.fromARGB(255, 231, 133, 48),
                         ),
                         child: Text(
                           'Login',
