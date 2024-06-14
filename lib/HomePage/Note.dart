@@ -4,7 +4,7 @@ import 'package:fmms/HomePage/OngoingRequest.dart';
 import 'package:fmms/HomePage/Note.dart';
 
 class Note extends StatelessWidget {
-  const Note({Key? key});
+  const Note({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,44 +34,62 @@ class Note extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Align buttons evenly in the row
                 children: [
-                  IconButton(
+                  ElevatedButton(
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => HomeScreen(controller: ScrollController())),
+                        MaterialPageRoute(
+                          builder: (context) => HomeScreen(controller: ScrollController()),
+                        ),
                       );
                     },
-                    icon: Text('Maintenance Request'),
-                    tooltip: 'Maintenance Request',
-                    color: Colors.black, // Color of the button
-                    splashColor: Colors.grey, // Color when pressed
-                    highlightColor: Colors.transparent, // No highlight color
+                    child: Text('Maintenance Request'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.black, // Background color of the button
+                      onPrimary: Colors.white, // Text color
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
                   ),
-                  IconButton(
+                  ElevatedButton(
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => OngoingRequest()),
+                        MaterialPageRoute(
+                          builder: (context) => OngoingRequest(),
+                        ),
                       );
                     },
-                    icon: Text('Ongoing Requests'),
-                    tooltip: 'Ongoing Requests',
-                    color: Colors.green, // Color of the button
-                    splashColor: Colors.grey, // Color when pressed
-                    highlightColor: Colors.transparent, // No highlight color
+                    child: Text('Ongoing Requests'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.green, // Background color of the button
+                      onPrimary: Colors.white, // Text color
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
                   ),
-                  IconButton(
+                  ElevatedButton(
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Note()),
+                        MaterialPageRoute(
+                          builder: (context) => Note(),
+                        ),
                       );
                     },
-                    icon: Text('Notifications'),
-                    tooltip: 'Notifications',
-                    color: Colors.orange, // Color of the button
-                    splashColor: Colors.grey, // Color when pressed
-                    highlightColor: Colors.transparent, // No highlight color
+                    child: Text('Notifications'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.orange, // Background color of the button
+                      onPrimary: Colors.white, // Text color
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
                   ),
                 ],
               ),

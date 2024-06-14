@@ -25,25 +25,35 @@ class _SignupPageState extends State<SignupPage> {
   @override
   void initState() {
     super.initState();
-    _regNoController.addListener(() {
-      setState(() {
-        _updateRoleBasedOnRegNo(_regNoController.text);
-      });
-    });
+    _regNoController.addListener(_updateRole);
   }
 
-  void _updateRoleBasedOnRegNo(String regNo) {
-    if (regNo.startsWith('EG')) {
-      _roleValue = 'Student';
-    } else if (regNo.startsWith('AC')) {
-      _roleValue = 'Academic Staff';
-    } else if (regNo.startsWith('AD')) {
-      _roleValue = 'Admin';
-    } else if (regNo.startsWith('MD')) {
-      _roleValue = 'Maintenance Division';
-    } else {
-      _roleValue = null;
-    }
+  @override
+  void dispose() {
+    _fullNameController.dispose();
+    _emailController.dispose();
+    _regNoController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _contactNumberController.dispose();
+    super.dispose();
+  }
+
+  void _updateRole() {
+    String regNo = _regNoController.text;
+    setState(() {
+      if (regNo.startsWith('EG')) {
+        _roleValue = 'Student';
+      } else if (regNo.startsWith('AC')) {
+        _roleValue = 'Academic Staff';
+      } else if (regNo.startsWith('AD')) {
+        _roleValue = 'Admin';
+      } else if (regNo.startsWith('MD')) {
+        _roleValue = 'Maintenance Division';
+      } else {
+        _roleValue = null; // Clear role if not matched
+      }
+    });
   }
 
   Future<void> _signUp(
@@ -171,7 +181,8 @@ class _SignupPageState extends State<SignupPage> {
               ),
               SizedBox(height: 10),
               TextField(
-                controller: TextEditingController(text: _roleValue),
+                enabled: false, // Disable user input
+                controller: TextEditingController(text: _roleValue ?? ''),
                 decoration: InputDecoration(
                   labelText: 'Role',
                   border: OutlineInputBorder(
@@ -181,7 +192,6 @@ class _SignupPageState extends State<SignupPage> {
                   fillColor: Color.fromARGB(255, 234, 225, 232),
                   contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                 ),
-                enabled: false,
               ),
               SizedBox(height: 10),
               DropdownButtonFormField<String>(
@@ -199,12 +209,14 @@ class _SignupPageState extends State<SignupPage> {
                   'Interdisciplinary Studies',
                   'Maintenance Division',
                   'Admin Sector'
-                ].map<DropdownMenuItem<String>>(
-                  (value) => DropdownMenuItem(
-                    value: value,
-                    child: Text(value),
-                  ),
-                ).toList(),
+                ]
+                    .map<DropdownMenuItem<String>>(
+                      (value) => DropdownMenuItem(
+                        value: value,
+                        child: Text(value),
+                      ),
+                    )
+                    .toList(),
                 decoration: InputDecoration(
                   labelText: 'Department',
                   hintText: 'Select Department',

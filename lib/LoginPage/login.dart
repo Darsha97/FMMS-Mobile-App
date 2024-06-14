@@ -18,8 +18,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
@@ -186,6 +186,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     SizedBox(height: 20),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           'Don’t have an account?',
@@ -196,7 +197,7 @@ class _LoginPageState extends State<LoginPage> {
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        SizedBox(width: 2.5),
+                        SizedBox(width: 5),
                         InkWell(
                           onTap: () {
                             Navigator.push(
@@ -219,13 +220,18 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                     ),
                     SizedBox(height: 5),
-                    Text(
-                      'Forget Password?',
-                      style: TextStyle(
-                        color: Color(0xFF003580),
-                        fontSize: 15,
-                        fontFamily: 'Poppins',
-                        fontWeight: FontWeight.w500,
+                    InkWell(
+                      onTap: () {
+                        // Handle forget password logic
+                      },
+                      child: Text(
+                        'Forget Password?',
+                        style: TextStyle(
+                          color: Color(0xFF003580),
+                          fontSize: 15,
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                     SizedBox(height: 20),

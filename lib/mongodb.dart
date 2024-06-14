@@ -24,26 +24,88 @@ class MongoDatabase {
     }
   }
 
-  // Function to handle user login
-  static Future<bool> login(String username, String password) async {
-    var userCollection = db!.collection(userCollectionName);
-    var user =
-        await userCollection.findOne({'regNo': username, 'password': password});
-    return user != null;
+  static Future<String?> login(String username, String password) async {
+    try {
+      // Ensure that the database connection is established
+      if (db == null) {
+        await connect();
+      }
+
+      var userCollection = db!.collection(userCollectionName);
+      var user = await userCollection.findOne({'regNo': username, 'password': password});
+
+      if (user != null) {
+        // Return the userId if the user exists
+        return user['_id'].toString(); // Assuming '_id' is the field containing the userId
+      } else {
+        // Return null if the user does not exist or the credentials are incorrect
+        return null;
+      }
+    } catch (e) {
+      log(e.toString());
+      return null; // Return null in case of any error
+    }
   }
 
   static Future<String> insert(User data) async {
     try {
+      // Ensure that the database connection is established
+      if (db == null) {
+        await connect();
+      }
+
       var userCollection = db!.collection(userCollectionName);
       var result = await userCollection.insertOne(data.toJson());
       if (result.isSuccess) {
-        return "SignUp Successful";
+        return "Sign Up Successful";
       } else {
-        return "SignUp Failed.";
+        return "Sign Up Failed.";
       }
     } catch (e) {
       print(e.toString());
-      return e.toString();
+      return "Sign Up Failed.";
+    }
+  }
+
+  static Future<List<Map<String, dynamic>>> getRequestDetailsByUser(String userId) async {
+    try {
+      if (db == null) {
+        await connect();
+      }
+
+      var requests = await db!
+          .collection('maintenance_requests')
+          .find(where.eq('submittedBy', userId))
+          .toList();
+
+      return requests.map((request) => request as Map<String, dynamic>).toList();
+    } catch (e) {
+      log(e.toString());
+      return [];
+    } finally {
+      if (db != null) {
+        await db!.close();
+      }
+    }
+  }
+
+  static Future<String?> getUserId(String email) async {
+    try {
+      if (db == null) {
+        await connect();
+      }
+
+      final userCollection = db!.collection(userCollectionName);
+      final user = await userCollection.findOne(where.eq('email', email));
+
+      if (user != null) {
+        return user['_id'].toString();
+      } else {
+        return null;
+      }
+    } catch (e) {
+      log(e.toString());
+      return null;
     }
   }
 }
