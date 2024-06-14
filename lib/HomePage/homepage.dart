@@ -3,6 +3,10 @@ import 'package:fmms/Services/dataBase.dart';
 import 'package:fmms/AddRequest/request.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+ 
+import 'package:fmms/HomePage/OngoingRequest.dart';
+import 'package:fmms/HomePage/Note.dart';
+import 'package:fmms/LoginPage/login.dart';
 
 class HomeScreen extends StatefulWidget {
   final ScrollController controller;
@@ -68,12 +72,25 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'DashBoard',
+          'Dashboard',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: const Color(0xFF003580),
         iconTheme: const IconThemeData(color: Colors.white),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => LoginPage(controller: PageController())),
+            );
+          },
+        ),
       ),
+
+        
+        
+      
       body: Stack(
         children: [
           Container(
@@ -83,6 +100,62 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Colors.white,
             ),
           ),
+       Container(
+  decoration: BoxDecoration(
+    color: Colors.grey[400], // Background color of the container
+    borderRadius: BorderRadius.circular(10.0), // Rounded corners for the container
+  ),
+  padding: EdgeInsets.all(10.0), // Padding around the container
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Align buttons evenly in the row
+    children: [
+      IconButton(
+       onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => HomeScreen(controller: ScrollController())),
+    );
+  },
+        icon: Text('Maintenance Request'),
+        tooltip: 'Maintenance Request',
+        color: Colors.black, // Color of the button
+        //iconColor: Colors.white, // Color of the icon
+        splashColor: Colors.grey, // Color when pressed
+        highlightColor: Colors.transparent, // No highlight color
+      ),
+      IconButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => OngoingRequest()),
+          );
+        },
+        icon: Text('Ongoing Requests'),
+        tooltip: 'Ongoing Requests',
+        color: Colors.green, // Color of the button
+        //iconColor: Colors.white, // Color of the icon
+        splashColor: Colors.grey, // Color when pressed
+        highlightColor: Colors.transparent, // No highlight color
+      ),
+      IconButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Note()),
+          );
+        },
+        icon: Text('Notifications'),
+        tooltip: 'Notifications',
+        color: Colors.orange, // Color of the button
+        //iconColor: Colors.white, // Color of the icon
+        splashColor: Colors.grey, // Color when pressed
+        highlightColor: Colors.transparent, // No highlight color
+      ),
+    ],
+  ),
+),
+
+
           Container(
             margin: EdgeInsets.only(left: 20.0, right: 20.0, top: kToolbarHeight + 10.0),
             child: Column(
@@ -124,12 +197,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.request_page),
-                  label: 'Requests',
+                  label: 'Add Request',
                 ),
-                 BottomNavigationBarItem(
-                  icon: Icon(Icons.notification_add),
-                  label: 'Notification',
-                ),
+                //  BottomNavigationBarItem(
+                //   icon: Icon(Icons.notification_add),
+                //   label: 'Notification',
+                // ),
                 
               ],
               currentIndex: _selectedIndex,

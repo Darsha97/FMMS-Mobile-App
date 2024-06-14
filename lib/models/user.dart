@@ -1,16 +1,16 @@
-import 'dart:developer';
-import 'package:fmms/models/maintenanceRequest.dart';
+import 'package:mongo_dart/mongo_dart.dart';
 
 class User {
-  final Object id;
-  final String fullName;
-  final String email;
-  final String regNo;
-  final String password;
-  final String confirmPassword;
-  final String? contactNumber;
-  final String role;
-  final String? department;
+  ObjectId id;
+  String fullName;
+  String email;
+  String regNo;
+  String password;
+  String confirmPassword;
+  String contactNumber;
+  String role;
+  String department;
+  String status;
 
   User({
     required this.id,
@@ -19,24 +19,11 @@ class User {
     required this.regNo,
     required this.password,
     required this.confirmPassword,
-    this.contactNumber,
+    required this.contactNumber,
     required this.role,
-    this.department,
+    required this.department,
+    required this.status,
   });
-
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      id: json['_id'],
-      fullName: json['fullName'],
-      email: json['email'],
-      regNo: json['regNo'],
-      password: json['password'],
-      confirmPassword: json['confirmPassword'],
-      contactNumber: json['contactNumber'],
-      role: json['role'],
-      department: json['department'],
-    );
-  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -49,6 +36,7 @@ class User {
       'contactNumber': contactNumber,
       'role': role,
       'department': department,
+      'status': status,
     };
   }
 }

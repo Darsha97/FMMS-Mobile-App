@@ -6,7 +6,6 @@ import 'package:fmms/AppBar/color.dart';
 import 'package:fmms/AppBar/custom_paint.dart';
 import 'package:fmms/AppBar/model.dart';
 import 'package:fmms/AppBar/text_style.dart';
-import 'package:fmms/HomePage/notification.dart';
 import 'package:fmms/HomePage/profile.dart';
  
 
@@ -57,7 +56,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               HomeScreen(controller: _scrollControllers[0]),
               RequestPage(controller: _scrollControllers[1]),
-              Notifiction(controller: _scrollControllers[3]),
+              //Notification(controller: _scrollControllers[3]),
               Profile(controller: _scrollControllers[4]),
             ],
           ),

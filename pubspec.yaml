@@ -39,7 +39,7 @@ dependencies:
   random_string: ^2.3.1
   firebase_auth: ^4.5.0
   image_picker: ^1.0.7
-  http: ^0.13.3
+  http: ^0.13.6 
   mongo_dart: ^0.10.0
   
    
@@ -73,6 +73,7 @@ flutter:
     - assets/search.png
     - assets/user.png
     - assets/image.png
+    - assets/draw2.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
   # For details regarding adding assets from package dependencies, see

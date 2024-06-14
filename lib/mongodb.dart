@@ -4,12 +4,11 @@ import 'dart:developer';
 
 class MongoDatabase {
   static Db? db;
-  static final String userCollectionName = 'users';
+  static final String userCollectionName = 'newuser';
 
   static Future<void> connect() async {
     try {
-      db = await Db.create(
-          'mongodb+srv://facultymaintenance:fmms123@fmms.zwouah7.mongodb.net/?retryWrites=true&w=majority');
+      db = await Db.create('mongodb+srv://facultymaintenance:fmms123@fmms.zwouah7.mongodb.net/?retryWrites=true&w=majority');
       await db!.open();
       inspect(db);
     } catch (e) {
@@ -38,7 +37,7 @@ class MongoDatabase {
       var userCollection = db!.collection(userCollectionName);
       var result = await userCollection.insertOne(data.toJson());
       if (result.isSuccess) {
-        return "SignUp Sucessfull";
+        return "SignUp Successful";
       } else {
         return "SignUp Failed.";
       }
